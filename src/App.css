@@ -42,3 +42,10 @@
 	justify-content: space-between;
 	margin-bottom: 50px;
 }
+
+.name {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 10px;
+	width: 200px;
+}

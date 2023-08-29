@@ -1,27 +1,65 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { Header } from './components/Header';
-import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { fetchUsers, setUsers } from './redux/usersSlice';
 
-function App() {
-	const dispatch = useDispatch()
-	const users = useSelector(state => state.users.users)
+const App = () => {
+	const [users, setUsers] = useState([])
+	const [value, setValue] = useState('')
+
+	const sortNameIncrement = () => {
+		const sordedUsers = [...users]
+		sordedUsers.sort((a, b) => {
+			if (a.name > b.name) {
+				return 1;
+			}
+			if (a.name < b.name) {
+				return -1;
+			}
+			return 0;
+		});
+		setUsers(sordedUsers)
+	}
+
+	const sortNameDecrement = () => {
+		const sordedUsers = [...users]
+		sordedUsers.sort((a, b) => {
+			if (a.name > b.name) {
+				return -1;
+			}
+			if (a.name < b.name) {
+				return 1;
+			}
+			// a должно быть равным b
+			return 0;
+		});
+		setUsers(sordedUsers)
+	}
 
 	useEffect(() => {
-		fetch('https://jsonplaceholder.typicode.com/users')
-			.then((response) => response.json())
-			.then((data) => {
-				console.log(data)
-				dispatch(setUsers(data))
-			})
+		axios.get('https://jsonplaceholder.typicode.com/users').then((res) => {
+			setUsers(res.data)
+		});
 	}, [])
+
+	const onChangeInput = (str) => {
+		setValue(str)
+	}
 
 
 	return (
 		<>
-			<Header />
+			<div className="header">
+				<input
+					className='search'
+					placeholder="search..."
+					onChange={(e) => onChangeInput(e.target.value)}
+					value={value}
+				/>
+			</div>
+			<div className='name'>
+				<button onClick={() => sortNameIncrement()}>Сортировка по: имени+</button>
+				<button onClick={() => sortNameDecrement()}>Сортировка по: имени-</button>
+			</div>
 			{
 				users.map(user => {
 					return (
@@ -29,7 +67,6 @@ function App() {
 					)
 				})
 			}
-
 		</>
 	);
 }
