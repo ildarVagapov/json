@@ -61,7 +61,9 @@ const App = () => {
 				<button onClick={() => sortNameDecrement()}>Сортировка по: имени-</button>
 			</div>
 			{
-				users.map(user => {
+				users.filter((user) =>
+					user.name.toLowerCase().includes(value.toLowerCase())
+				).map(user => {
 					return (
 						<div key={user.id}>{user.name}</div>
 					)
